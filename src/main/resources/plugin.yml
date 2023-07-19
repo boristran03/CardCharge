@@ -1,0 +1,8 @@
+name: CardCharge
+version: '${project.version}'
+main: com.minefh.cardcharge.CardCharge
+api-version: '1.19'
+
+commands:
+  napthe:
+    usage: /<command>

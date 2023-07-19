@@ -1,0 +1,36 @@
+Card-Enabled:
+  - 'Viettel'
+  - 'Vinaphone'
+  - 'Mobifone'
+  - 'Vietnamobile'
+  - 'Vcoin'
+  - 'Zing'
+  - 'Gate'
+
+Points-Multiply: 1
+
+TheSieuToc:
+  api-key: ""
+  api-secret: ""
+
+PC-GUI:
+  serialInput:
+    title: "MineFH"
+    input-text: "Nhap so serial vao day"
+    left-item:
+      enabled: false
+      displayName: ""
+      lore:
+        - "Line 1"
+        - "Line 2"
+      custom-model-data: 1
+  pinInput:
+    title: "MineFH"
+    input-text: "Nhap ma pin vao day"
+    left-item:
+      enabled: false
+      displayName: ""
+      lore:
+        - "Line 1"
+        - "Line 2"
+      custom-model-data: 1

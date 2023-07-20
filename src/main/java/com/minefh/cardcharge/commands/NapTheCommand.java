@@ -111,6 +111,7 @@ public class NapTheCommand implements CommandExecutor {
             Bukkit.getScheduler().runTaskAsynchronously(CardCharge.getInstance(), () -> {
                 MySQL mySQL = MySQL.getInstance();
                 mySQL.purgeData(strings[1]);
+                player.sendMessage(Component.text("§aĐã xóa thành công dữ liệu của người chơi " + strings[1]));
             });
         }
         return true;

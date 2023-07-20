@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CacheStorage {
 
-    //JUST SAVE WHEN THE PLUGIN IS DOWN OR ON SERVER SHUTDOWN
+    // JUST SAVE WHEN THE PLUGIN IS DOWN OR ON SERVER SHUTDOWN
 
     private final Gson gson;
     private final CardCharge plugin;
@@ -22,7 +22,6 @@ public class CacheStorage {
         this.cardCache = CardCache.getInstance();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
-
 
     public void savePendingTransactions() {
         List<Transaction> transactions = cardCache.getTransactionList();
@@ -38,7 +37,6 @@ public class CacheStorage {
         } finally {
             PluginUtils.cleanUpFileIO(writer, null);
         }
-
     }
 
     public void loadTransactions() {

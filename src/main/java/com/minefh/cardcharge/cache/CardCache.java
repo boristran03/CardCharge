@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.objects.Transaction;
 import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
-import com.minefh.cardcharge.utils.ExternalLogger;
+import com.minefh.cardcharge.databases.InternalLogger;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,20 +18,20 @@ public class CardCache {
     private final List<Transaction> transactionList;
     private final TheSieuTocAPI theSieuTocAPI;
     private final PlayerPointsAPI playerPointsAPI;
-    private final ExternalLogger logger;
+    private final InternalLogger logger;
 
     private CardCache() {
         this.theSieuTocAPI = TheSieuTocAPI.getInstance();
         this.transactionList = Collections.synchronizedList(new ArrayList<>());
         this.playerPointsAPI = CardCharge.getInstance().getPlayerPointsAPI();
-        this.logger = ExternalLogger.getInstance();
+        this.logger = InternalLogger.getInstance();
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(CardCharge.getInstance(), () -> {
             List<Transaction> successList = transactionList.stream().filter((transaction) -> {
                 JsonObject response = theSieuTocAPI.checkCard(transaction.getId());
                 Player player = Bukkit.getPlayer(transaction.getSubmiterUUID());
                 if(response == null) {
-                    return false;
+                    return true;
                 }
                 String status =  response.get("status").getAsString();
                 String msg = response.get("msg").getAsString();
@@ -48,7 +48,7 @@ public class CardCache {
                         logger.logTransaction(transaction, Transaction.Result.SUCCESS);
                         return true;
                     }
-                    case "-09" -> {
+                    case "-9" -> {
                         if (player != null) {
                             player.sendMessage("Vui lòng chờ trong giây lát, thẻ của bạn sẽ được xử lí");
                         }

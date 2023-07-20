@@ -13,6 +13,13 @@ TheSieuToc:
   api-key: ""
   api-secret: ""
 
+MySQL:
+  enabled: false
+  hostname: "localhost:3306"
+  database: ""
+  username: "root"
+  password: ""
+
 PC-GUI:
   serialInput:
     title: "MineFH"

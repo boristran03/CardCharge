@@ -1,10 +1,9 @@
 package com.minefh.cardcharge.objects;
 
 import com.google.gson.JsonObject;
-import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.cache.CardCache;
 import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
-import com.minefh.cardcharge.utils.ExternalLogger;
+import com.minefh.cardcharge.databases.InternalLogger;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -23,7 +22,7 @@ public class Transaction {
         this.playerName = playerName;
         this.time = System.currentTimeMillis();
         this.submitPlayerUUID = submitPlayerUUID;
-        this.result = Result.UNKNOWN; //DEFAULT RESULT
+        this.result = Result.PENDING; //DEFAULT RESULT
     }
 
     public Result getResult() {
@@ -37,6 +36,7 @@ public class Transaction {
     public long getDate() {
         return time;
     }
+
     public String getId() {
         return id;
     }
@@ -44,6 +44,7 @@ public class Transaction {
     public Card getCard() {
         return card;
     }
+
     public UUID getSubmiterUUID() {
         return UUID.fromString(submitPlayerUUID);
     }
@@ -64,10 +65,23 @@ public class Transaction {
         return receivedMsg;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "time=" + time +
+                ", id='" + id + '\'' +
+                ", card=" + card +
+                ", playerName='" + playerName + '\'' +
+                ", submitPlayerUUID='" + submitPlayerUUID + '\'' +
+                ", receivedMsg='" + receivedMsg + '\'' +
+                ", result=" + result +
+                '}';
+    }
+
     public static boolean makeTransaction(Player player, Card card) {
         String submitterUUID = player.getUniqueId().toString();
         JsonObject response = TheSieuTocAPI.getInstance().sendCard(card);
-        ExternalLogger logger = ExternalLogger.getInstance();
+        InternalLogger logger = InternalLogger.getInstance();
 
         Transaction transaction = new Transaction(player.getName(), submitterUUID, card);
         if (!response.get("status").getAsString().equals("00")) {
@@ -85,9 +99,7 @@ public class Transaction {
         return true;
     }
 
-
-
     public enum Result {
-        SUCCESS, FAIL, UNKNOWN
+        SUCCESS, FAIL, PENDING
     }
 }

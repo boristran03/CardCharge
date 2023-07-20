@@ -11,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +46,19 @@ public class PluginUtils {
     public static Component convertStringToComponent(String str) {
         String colorized = ChatColor.translateAlternateColorCodes('&', str);
         return MiniMessage.miniMessage().deserialize(colorized);
+    }
+
+    public static void cleanMySQL(PreparedStatement statement, ResultSet rs) {
+        try {
+            if(statement != null) {
+                statement.close();
+            }
+            if(rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<Component> convertStringListToComponent(List<String> strList) {

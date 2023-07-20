@@ -1,22 +1,22 @@
-package com.minefh.cardcharge.utils;
+package com.minefh.cardcharge.databases;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.objects.Transaction;
+import com.minefh.cardcharge.utils.PluginUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class ExternalLogger {
+public class InternalLogger {
+
+    //PROVIDES READABILITY
 
     private final CardCharge plugin;
     private final File file;
     private final Gson gson;
 
-    private ExternalLogger() {
+    private InternalLogger() {
         this.plugin = CardCharge.getInstance();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.file = new File(plugin.getDataFolder(), "log.txt");
@@ -36,34 +36,32 @@ public class ExternalLogger {
     }
 
     public void logTransaction(Transaction transaction, Transaction.Result result) {
-        BufferedWriter writer = null;
-        BufferedReader reader = null;
+        PrintWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(this.file));
-            reader = new BufferedReader(new FileReader(this.file));
-            Transaction[] rawArray = gson.fromJson(reader, Transaction[].class);
-            List<Transaction> transactions;
-            if(rawArray != null) {
-                transactions = Arrays.asList(rawArray);
-            } else {
-                transactions = new ArrayList<>();
-            }
+            writer = new PrintWriter(this.file);
             transaction.setResult(result);
-            transactions.add(transaction);
-            gson.toJson(transactions, writer);
+            writer.println(transaction);
+
+            //WILL REFACTOR IN THE FUTURE
+            if(plugin.isMySQLEnabled() && result == Transaction.Result.SUCCESS) {
+                MySQL mySQL = MySQL.getInstance();
+                mySQL.insertDonateSuccess(transaction);
+                plugin.getLogger().warning("A new record has been added to mysql," +
+                        " this is debug message and will be removed in the future");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            PluginUtils.cleanUpFileIO(writer, reader);
+            PluginUtils.cleanUpFileIO(writer, null);
         }
     }
 
-    public static ExternalLogger getInstance() {
+    public static InternalLogger getInstance() {
         return InstanceHelper.INSTANCE;
     }
 
     private static class InstanceHelper {
-        private static final ExternalLogger INSTANCE = new ExternalLogger();
+        private static final InternalLogger INSTANCE = new InternalLogger();
     }
 
 }

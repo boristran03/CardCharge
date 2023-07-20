@@ -2,6 +2,7 @@ package com.minefh.cardcharge;
 
 import com.minefh.cardcharge.cache.CacheStorage;
 import com.minefh.cardcharge.commands.NapTheCommand;
+import com.minefh.cardcharge.databases.MySQL;
 import com.minefh.cardcharge.listeners.InventoryListener;
 import com.minefh.cardcharge.utils.PluginUtils;
 import org.black_ixx.playerpoints.PlayerPoints;
@@ -27,6 +28,10 @@ public final class CardCharge extends JavaPlugin {
     private ItemStack leftInputSerial, leftInputPin;
     private String serialInputText, pinInputText;
 
+    //MYSQL FIELDS
+    private boolean isMySQLEnabled;
+    private String hostname, database, username, password;
+
 
     @Override
     public void onEnable() {
@@ -45,11 +50,21 @@ public final class CardCharge extends JavaPlugin {
                     " file before turning on this plugin");
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        //MYSQL ZONE
+        if(isMySQLEnabled) {
+            MySQL mySQL = new MySQL(this.hostname, this.database, this.username, this.password);
+            mySQL.connect();
+            mySQL.createDonateSuccessTable();
+        } else {
+            getLogger().warning("MySQL is not enabled, some function maybe not work!");
+        }
     }
 
     @Override
     public void onDisable() {
         CacheStorage.getInstance().savePendingTransactions();
+        MySQL.getInstance().close();
     }
 
     private void registerCommands() {
@@ -80,6 +95,13 @@ public final class CardCharge extends JavaPlugin {
         this.pinInputText = getConfig().getString("PC-GUI.pinInput.input-text");
         this.leftInputSerial = PluginUtils.parseConfigItem("PC-GUI.serialInput.left-item", getConfig());
         this.leftInputPin = PluginUtils.parseConfigItem("PC-GUI.pinInput.left-item", getConfig());
+
+        //MYSQL ZONE
+        this.isMySQLEnabled = getConfig().getBoolean("MySQL.enabled");
+        this.hostname = getConfig().getString("MySQL.hostname");
+        this.database = getConfig().getString("MySQL.database");
+        this.username = getConfig().getString("MySQL.username");
+        this.password = getConfig().getString("MySQL.password");
     }
 
 
@@ -121,6 +143,30 @@ public final class CardCharge extends JavaPlugin {
 
     public String getPinInputText() {
         return pinInputText;
+    }
+
+
+    //MYSQL GETTER
+
+
+    public boolean isMySQLEnabled() {
+        return isMySQLEnabled;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public static CardCharge getInstance() {

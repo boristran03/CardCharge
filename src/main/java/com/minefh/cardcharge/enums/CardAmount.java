@@ -1,5 +1,8 @@
 package com.minefh.cardcharge.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum CardAmount {
     _10K(10000, 1),
     _20K(20000, 2),
@@ -27,6 +30,17 @@ public enum CardAmount {
             }
         }
         return UNKNOWN;
+    }
+
+    public static List<String> getEnabledAmountAsStr() {
+        List<String> result = new ArrayList<>();
+        for(CardAmount cardAmount: values()) {
+            if(cardAmount.amount == 0) {
+                continue;
+            }
+            result.add(String.valueOf(cardAmount.amount));
+        }
+        return result;
     }
 
     public int getId() {

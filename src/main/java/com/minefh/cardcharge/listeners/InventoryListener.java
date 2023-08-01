@@ -14,7 +14,7 @@ import org.bukkit.inventory.Inventory;
 
 public class InventoryListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent e) {
         if(!(e.getWhoClicked() instanceof Player player)) {
             return;

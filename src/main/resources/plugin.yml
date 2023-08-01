@@ -2,6 +2,9 @@ name: CardCharge
 version: '${project.version}'
 main: com.minefh.cardcharge.CardCharge
 api-version: '1.19'
+softdepend:
+  - floodgate
+  - DeluxeMenus
 
 commands:
   napthe:

@@ -4,9 +4,11 @@ import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.objects.Transaction;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -21,6 +23,14 @@ public class PluginUtils {
 
     public static boolean isFullOfNumber(String text) {
         return text.matches("[0-9]+");
+    }
+
+    public static void runCommandAsPlayer(Player player, String command) {
+        Bukkit.dispatchCommand(player, command);
+    }
+
+    public static void runCommandAsConsole(Player player, String command) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%p", player.getName()));
     }
 
     public static ItemStack parseConfigItem(String path, FileConfiguration config) {

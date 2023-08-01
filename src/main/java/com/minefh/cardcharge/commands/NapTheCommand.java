@@ -3,7 +3,7 @@ package com.minefh.cardcharge.commands;
 import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.databases.MySQL;
 import com.minefh.cardcharge.enums.CardAmount;
-import com.minefh.cardcharge.gui.CardSelector;
+import com.minefh.cardcharge.forms.NapTheForm;
 import com.minefh.cardcharge.gui.SerialInput;
 import com.minefh.cardcharge.objects.Card;
 import com.minefh.cardcharge.utils.PluginUtils;
@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.geysermc.floodgate.api.FloodgateApi;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,8 +32,12 @@ public class NapTheCommand implements CommandExecutor {
             return true;
         }
         if(strings.length == 0 && player.hasPermission("cardcharge.open")) {
-            CardSelector cardSelector = new CardSelector();
-            player.openInventory(cardSelector.getInventory());
+            FloodgateApi floodgateApi = FloodgateApi.getInstance();
+            if(!floodgateApi.isFloodgatePlayer(player.getUniqueId())) {
+                PluginUtils.runCommandAsConsole(player, "dm open napthe %p");
+                return true;
+            }
+            floodgateApi.getPlayer(player.getUniqueId()).sendForm(new NapTheForm(player).getForm());
             return true;
         }
         if(strings.length == 1 && strings[0].equalsIgnoreCase("help")) {
@@ -78,10 +83,8 @@ public class NapTheCommand implements CommandExecutor {
                 AtomicInteger start = new AtomicInteger(1);
                 player.sendMessage(Component.text("§e§lBXH NGƯỜI NẠP NHIỀU NHẤT"));
                 player.sendMessage(Component.text(""));
-                mysql.getTopTen().forEach((username, amount) -> {
-                    player.sendMessage(Component.text("§8" + start.getAndIncrement() + ") §c" + username
-                            + " §fđã nạp §e" + amount + " VNĐ"));
-                });
+                mysql.getTopTen().forEach((username, amount) -> player.sendMessage(Component.text("§8" + start.getAndIncrement() + ") §c" + username
+                        + " §fđã nạp §e" + amount + " VNĐ")));
             });
             return true;
         }

@@ -28,19 +28,19 @@ public class NapTheCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(!(commandSender instanceof Player player)) {
+        if (!(commandSender instanceof Player player)) {
             return true;
         }
-        if(strings.length == 0 && player.hasPermission("cardcharge.open")) {
+        if (strings.length == 0 && player.hasPermission("cardcharge.open")) {
             FloodgateApi floodgateApi = FloodgateApi.getInstance();
-            if(!floodgateApi.isFloodgatePlayer(player.getUniqueId())) {
+            if (!floodgateApi.isFloodgatePlayer(player.getUniqueId())) {
                 PluginUtils.runCommandAsConsole(player, "dm open napthe %p");
                 return true;
             }
             floodgateApi.getPlayer(player.getUniqueId()).sendForm(new NapTheForm(player).getForm());
             return true;
         }
-        if(strings.length == 1 && strings[0].equalsIgnoreCase("help")) {
+        if (strings.length == 1 && strings[0].equalsIgnoreCase("help")) {
             player.sendMessage(Component.text("§c§lLỆNH PLUGIN NẠP THẺ"));
             player.sendMessage(Component.text(""));
             player.sendMessage(Component.text("§e/napthe choose <Loại thẻ> <Giá trị> §7để tiến hành nạp thẻ")); //CHOOSE
@@ -50,17 +50,17 @@ public class NapTheCommand implements CommandExecutor {
             return true;
         }
         //COMMAND: /napthe choose Viettel 10000
-        if(player.hasPermission("cardcharge.choose")
+        if (player.hasPermission("cardcharge.choose")
                 && strings.length == 3
                 && strings[0].equalsIgnoreCase("choose")) {
             String telco = strings[1];
             String priceStr = strings[2];
-            if(!PluginUtils.isFullOfNumber(priceStr)) {
+            if (!PluginUtils.isFullOfNumber(priceStr)) {
                 player.sendMessage("§cGiá trị thẻ nạp bạn vừa nhâp không hợp lệ!");
                 return true;
             }
             int amount = Integer.parseInt(priceStr);
-            if(CardAmount.getAmount(amount) == CardAmount.UNKNOWN) {
+            if (CardAmount.getAmount(amount) == CardAmount.UNKNOWN) {
                 player.sendMessage("§cGiá trị thẻ nạp bạn vừa nhâp không hợp lệ!");
                 return true;
             }
@@ -71,10 +71,10 @@ public class NapTheCommand implements CommandExecutor {
             return true;
         }
         //COMMAND: /napthe top
-        if(player.hasPermission("cardcharge.viewtop")
+        if (player.hasPermission("cardcharge.viewtop")
                 && strings.length == 1
                 && strings[0].equalsIgnoreCase("top")) {
-            if(!plugin.isMySQLEnabled()) {
+            if (!plugin.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }
@@ -89,10 +89,10 @@ public class NapTheCommand implements CommandExecutor {
             return true;
         }
         //COMMAND: /napthe test %playerName% %amount%
-        if(player.hasPermission("cardcharge.admin")
+        if (player.hasPermission("cardcharge.admin")
                 && strings.length == 3
                 && strings[0].equalsIgnoreCase("test")) {
-            if(!plugin.isMySQLEnabled()) {
+            if (!plugin.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }
@@ -104,10 +104,10 @@ public class NapTheCommand implements CommandExecutor {
             return true;
         }
         //COMMAND: /napthe purge <name>
-        if(player.hasPermission("cardcharge.admin")
+        if (player.hasPermission("cardcharge.admin")
                 && strings.length == 2
                 && strings[0].equalsIgnoreCase("purge")) {
-            if(!plugin.isMySQLEnabled()) {
+            if (!plugin.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }

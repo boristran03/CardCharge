@@ -3,7 +3,6 @@ package com.minefh.cardcharge.databases;
 import com.minefh.cardcharge.objects.Card;
 import com.minefh.cardcharge.objects.Transaction;
 import com.minefh.cardcharge.utils.PluginUtils;
-import org.bukkit.entity.Player;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -27,6 +26,10 @@ public class MySQL {
         this.password = password;
     }
 
+    public static MySQL getInstance() {
+        return __instance;
+    }
+
     public void connect() {
         try {
             Class.forName("com.minefh.cardcharge.mysql.cj.jdbc.Driver");
@@ -38,7 +41,7 @@ public class MySQL {
 
     public void close() {
         try {
-            if(!connection.isClosed()) {
+            if (!connection.isClosed()) {
                 connection.close();
             }
         } catch (SQLException e) {
@@ -85,7 +88,6 @@ public class MySQL {
             PluginUtils.cleanMySQL(statement, null);
         }
     }
-
 
     public void debugDonate(String playerName, int amount) {
         String INSERT = "INSERT INTO success_donate (transaction_id, player_name, amount, serial, pin, telco, update_time) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -155,10 +157,6 @@ public class MySQL {
 
     public Connection getConnection() {
         return connection;
-    }
-
-    public static MySQL getInstance() {
-        return __instance;
     }
 
 }

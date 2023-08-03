@@ -23,6 +23,10 @@ public class CacheStorage {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
+    public static CacheStorage getInstance() {
+        return InstanceHelper.INSTANCE;
+    }
+
     public void savePendingTransactions() {
         List<Transaction> transactions = cardCache.getTransactionList();
         File file = new File(plugin.getDataFolder(), "cache.json");
@@ -43,12 +47,12 @@ public class CacheStorage {
         File file = new File(plugin.getDataFolder(), "cache.json");
         try {
             boolean created = file.createNewFile();
-            if(created) {
+            if (created) {
                 plugin.getLogger().info("File cache.json has been created!");
             }
             BufferedReader reader = new BufferedReader(new FileReader(file));
             Transaction[] transactions = gson.fromJson(reader, Transaction[].class);
-            if(transactions == null) {
+            if (transactions == null) {
                 return;
             }
             for (Transaction transaction : transactions) {
@@ -59,10 +63,6 @@ public class CacheStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static CacheStorage getInstance() {
-        return InstanceHelper.INSTANCE;
     }
 
     private static class InstanceHelper {

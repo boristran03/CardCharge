@@ -24,7 +24,7 @@ public record SerialInput(Card card) {
         builder.plugin(plugin);
         builder.title(plugin.getSerialInputTitle());
         builder.text(plugin.getSerialInputText());
-        if(leftItem != null) {
+        if (leftItem != null) {
             builder.itemLeft(leftItem);
         }
         builder.open(player);

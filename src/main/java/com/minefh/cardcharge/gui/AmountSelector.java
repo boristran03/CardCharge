@@ -25,7 +25,7 @@ public class AmountSelector implements InventoryHolder {
     }
 
     public int getAmountBySlot(int clickedSlot) {
-        if(!values.containsKey(clickedSlot)) {
+        if (!values.containsKey(clickedSlot)) {
             return 0;
         }
         return values.get(clickedSlot);
@@ -44,9 +44,9 @@ public class AmountSelector implements InventoryHolder {
         Inventory inv = Bukkit.createInventory(this, 27);
         this.values = new HashMap<>();
         int slot = 0;
-        for(CardAmount card: CardAmount.values()) {
+        for (CardAmount card : CardAmount.values()) {
             int amount = card.getAsInt();
-            if(amount > 0) {
+            if (amount > 0) {
                 ItemStack item = new ItemStack(Material.BOOK);
                 ItemMeta meta = item.getItemMeta();
                 meta.displayName(Component.text(amount));

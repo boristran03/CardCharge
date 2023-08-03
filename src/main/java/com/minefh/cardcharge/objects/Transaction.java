@@ -2,8 +2,8 @@ package com.minefh.cardcharge.objects;
 
 import com.google.gson.JsonObject;
 import com.minefh.cardcharge.cache.CardCache;
-import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
 import com.minefh.cardcharge.databases.InternalLogger;
+import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -11,9 +11,9 @@ import java.util.UUID;
 public class Transaction {
 
     private final long time;
-    private String id = "UNKNOWN";
     private final Card card;
     private final String playerName, submitPlayerUUID;
+    private String id = "UNKNOWN";
     private String receivedMsg;
     private Result result;
 
@@ -23,59 +23,6 @@ public class Transaction {
         this.time = System.currentTimeMillis();
         this.submitPlayerUUID = submitPlayerUUID;
         this.result = Result.PENDING; //DEFAULT RESULT
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    public long getDate() {
-        return time;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public UUID getSubmiterUUID() {
-        return UUID.fromString(submitPlayerUUID);
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setReceivedMsg(String receivedMsg) {
-        this.receivedMsg = receivedMsg;
-    }
-
-    public String getReceivedMsg() {
-        return receivedMsg;
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "time=" + time +
-                ", id='" + id + '\'' +
-                ", card=" + card +
-                ", playerName='" + playerName + '\'' +
-                ", submitPlayerUUID='" + submitPlayerUUID + '\'' +
-                ", receivedMsg='" + receivedMsg + '\'' +
-                ", result=" + result +
-                '}';
     }
 
     public static boolean makeTransaction(Player player, Card card) {
@@ -97,6 +44,59 @@ public class Transaction {
         transaction.setId(transactionID);
         CardCache.getInstance().addTransaction(transaction);
         return true;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
+    public long getDate() {
+        return time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public UUID getSubmiterUUID() {
+        return UUID.fromString(submitPlayerUUID);
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getReceivedMsg() {
+        return receivedMsg;
+    }
+
+    public void setReceivedMsg(String receivedMsg) {
+        this.receivedMsg = receivedMsg;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "time=" + time +
+                ", id='" + id + '\'' +
+                ", card=" + card +
+                ", playerName='" + playerName + '\'' +
+                ", submitPlayerUUID='" + submitPlayerUUID + '\'' +
+                ", receivedMsg='" + receivedMsg + '\'' +
+                ", result=" + result +
+                '}';
     }
 
     public enum Result {

@@ -4,6 +4,7 @@ import com.minefh.cardcharge.cache.CacheStorage;
 import com.minefh.cardcharge.commands.NapTheCommand;
 import com.minefh.cardcharge.databases.MySQL;
 import com.minefh.cardcharge.listeners.InventoryListener;
+import com.minefh.cardcharge.tasks.DiscountAnnounceTask;
 import com.minefh.cardcharge.utils.PluginUtils;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
@@ -28,10 +29,18 @@ public final class CardCharge extends JavaPlugin {
     private ItemStack leftInputSerial, leftInputPin;
     private String serialInputText, pinInputText;
 
+    //DISCOUNT
+    private int pointsRate;
+    private long timer;
+    private List<String> announceMessage;
+
     //MYSQL FIELDS
     private boolean isMySQLEnabled;
     private String hostname, database, username, password;
 
+    public static CardCharge getInstance() {
+        return __instance;
+    }
 
     @Override
     public void onEnable() {
@@ -45,20 +54,26 @@ public final class CardCharge extends JavaPlugin {
 
         CacheStorage.getInstance().loadTransactions();
 
-        if(apiKey == null || apiSecret == null || apiSecret.isEmpty() || apiKey.isEmpty()) {
+        if (apiKey == null || apiSecret == null || apiSecret.isEmpty() || apiKey.isEmpty()) {
             getLogger().warning("Please put your api key and api secret into the config.yml" +
                     " file before turning on this plugin");
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
         //MYSQL ZONE
-        if(isMySQLEnabled) {
+        if (isMySQLEnabled) {
             MySQL mySQL = new MySQL(this.hostname, this.database, this.username, this.password);
             mySQL.connect();
             mySQL.createDonateSuccessTable();
         } else {
             getLogger().warning("MySQL is not enabled, some function maybe not work!");
         }
+
+        // INITIALIZE TASK
+        new DiscountAnnounceTask();
+
+        //CONSOLE INFORMATION STUFF
+        getLogger().info("Points rate has been set to " + this.pointsRate);
     }
 
     @Override
@@ -77,7 +92,7 @@ public final class CardCharge extends JavaPlugin {
 
     private void hookPlayerPoints() {
         PluginManager manager = Bukkit.getPluginManager();
-        if(manager.getPlugin("PlayerPoints") == null) {
+        if (manager.getPlugin("PlayerPoints") == null) {
             getLogger().warning("Can't find PlayerPoints, turning off the plugin");
             manager.disablePlugin(this);
             return;
@@ -95,6 +110,9 @@ public final class CardCharge extends JavaPlugin {
         this.pinInputText = getConfig().getString("PC-GUI.pinInput.input-text");
         this.leftInputSerial = PluginUtils.parseConfigItem("PC-GUI.serialInput.left-item", getConfig());
         this.leftInputPin = PluginUtils.parseConfigItem("PC-GUI.pinInput.left-item", getConfig());
+        this.pointsRate = getConfig().getInt("Discount.Points-Rate");
+        this.announceMessage = getConfig().getStringList("Discount.Announce-Messages");
+        this.timer = getConfig().getLong("Discount.Timer");
 
         //MYSQL ZONE
         this.isMySQLEnabled = getConfig().getBoolean("MySQL.enabled");
@@ -104,9 +122,24 @@ public final class CardCharge extends JavaPlugin {
         this.password = getConfig().getString("MySQL.password");
     }
 
+    //DISCOUNT GETTER
 
     public PlayerPointsAPI getPlayerPointsAPI() {
         return this.playerPointsAPI;
+    }
+
+    public long getTimer() {
+        return timer;
+    }
+
+    public int getPointsRate() {
+        return pointsRate;
+    }
+
+    //THESIEUTOC GETTER
+
+    public List<String> getAnnounceMessage() {
+        return announceMessage;
     }
 
     public String getApiKey() {
@@ -141,13 +174,12 @@ public final class CardCharge extends JavaPlugin {
         return serialInputText;
     }
 
-    public String getPinInputText() {
-        return pinInputText;
-    }
-
 
     //MYSQL GETTER
 
+    public String getPinInputText() {
+        return pinInputText;
+    }
 
     public boolean isMySQLEnabled() {
         return isMySQLEnabled;
@@ -167,9 +199,5 @@ public final class CardCharge extends JavaPlugin {
 
     public String getPassword() {
         return password;
-    }
-
-    public static CardCharge getInstance() {
-        return __instance;
     }
 }

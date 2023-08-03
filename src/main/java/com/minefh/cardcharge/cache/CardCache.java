@@ -2,9 +2,9 @@ package com.minefh.cardcharge.cache;
 
 import com.google.gson.JsonObject;
 import com.minefh.cardcharge.CardCharge;
+import com.minefh.cardcharge.databases.InternalLogger;
 import com.minefh.cardcharge.objects.Transaction;
 import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
-import com.minefh.cardcharge.databases.InternalLogger;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,12 +15,14 @@ import java.util.List;
 
 public class CardCache {
 
+    private final CardCharge plugin;
     private final List<Transaction> transactionList;
     private final TheSieuTocAPI theSieuTocAPI;
     private final PlayerPointsAPI playerPointsAPI;
     private final InternalLogger logger;
 
     private CardCache() {
+        this.plugin = CardCharge.getInstance();
         this.theSieuTocAPI = TheSieuTocAPI.getInstance();
         this.transactionList = Collections.synchronizedList(new ArrayList<>());
         this.playerPointsAPI = CardCharge.getInstance().getPlayerPointsAPI();
@@ -30,18 +32,20 @@ public class CardCache {
             List<Transaction> successList = transactionList.stream().filter((transaction) -> {
                 JsonObject response = theSieuTocAPI.checkCard(transaction.getId());
                 Player player = Bukkit.getPlayer(transaction.getSubmiterUUID());
-                if(response == null) {
+                if (response == null) {
                     return true;
                 }
-                String status =  response.get("status").getAsString();
+                String status = response.get("status").getAsString();
                 String msg = response.get("msg").getAsString();
                 switch (status) {
                     case "00" -> {
                         if (player != null) {
                             player.sendMessage("Nạp thẻ thành công, đang cộng points!");
                         }
+                        int pointsRate = plugin.getPointsRate();
                         int pointsAmount = transaction.getCard().getAmount().getAsInt() / 1000;
-                        playerPointsAPI.give(transaction.getSubmiterUUID(), pointsAmount);
+                        playerPointsAPI.give(transaction.getSubmiterUUID(), pointsAmount * pointsRate);
+
 
                         //SOME LOGGING STUFF
                         transaction.setReceivedMsg(msg);
@@ -71,6 +75,10 @@ public class CardCache {
         }, 20L, 120);
     }
 
+    public static CardCache getInstance() {
+        return InstanceHelper.INSTANCE;
+    }
+
     public void addTransaction(Transaction transaction) {
         transactionList.add(transaction);
     }
@@ -83,13 +91,8 @@ public class CardCache {
         return transactionList.contains(transaction);
     }
 
-
     public List<Transaction> getTransactionList() {
         return Collections.unmodifiableList(transactionList);
-    }
-
-    public static CardCache getInstance() {
-        return InstanceHelper.INSTANCE;
     }
 
     private static class InstanceHelper {

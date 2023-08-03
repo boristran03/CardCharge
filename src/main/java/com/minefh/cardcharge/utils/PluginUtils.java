@@ -1,7 +1,5 @@
 package com.minefh.cardcharge.utils;
 
-import com.minefh.cardcharge.CardCharge;
-import com.minefh.cardcharge.objects.Transaction;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -11,8 +9,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +35,7 @@ public class PluginUtils {
     }
 
     public static ItemStack parseConfigItem(String path, FileConfiguration config) {
-        if(!config.getBoolean(path + ".enabled")) {
+        if (!config.getBoolean(path + ".enabled")) {
             return null;
         }
         String rawMaterial = config.getString(path + ".material");
@@ -42,10 +43,10 @@ public class PluginUtils {
         ItemMeta meta = item.getItemMeta();
         String displayName = config.getString(path + ".displayName");
         List<String> lore = config.getStringList(path + ".lore");
-        if(displayName != null) {
+        if (displayName != null) {
             meta.displayName(convertStringToComponent(displayName));
         }
-        if(!lore.isEmpty()) {
+        if (!lore.isEmpty()) {
             meta.lore(convertStringListToComponent(lore));
         }
         meta.setCustomModelData(config.getInt(path + ".custom-model-data"));
@@ -60,10 +61,10 @@ public class PluginUtils {
 
     public static void cleanMySQL(PreparedStatement statement, ResultSet rs) {
         try {
-            if(statement != null) {
+            if (statement != null) {
                 statement.close();
             }
-            if(rs != null) {
+            if (rs != null) {
                 rs.close();
             }
         } catch (SQLException e) {
@@ -77,12 +78,25 @@ public class PluginUtils {
         return result;
     }
 
+    public static List<String> replaceCharInStrings(@NotNull List<String> input, String replaceStr, String replacedBy) {
+        List<String> result = new ArrayList<>();
+        input.forEach((line) -> {
+            String replacedLine = line.replaceAll(replaceStr, replacedBy);
+            result.add(replacedLine);
+        });
+        return result;
+    }
+
+    public static String parseColor(String input) {
+        return ChatColor.translateAlternateColorCodes('&', input);
+    }
+
     public static void cleanUpFileIO(Writer writer, Reader reader) {
         try {
-            if(writer != null) {
+            if (writer != null) {
                 writer.close();
             }
-            if(reader != null) {
+            if (reader != null) {
                 reader.close();
             }
         } catch (IOException e) {

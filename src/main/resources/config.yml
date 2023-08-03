@@ -7,7 +7,11 @@ Card-Enabled:
   - 'Zing'
   - 'Gate'
 
-Points-Multiply: 1
+Discount:
+  Points-Rate: 1
+  Timer: 120 #AS SECOND
+  Announce-Messages:
+    - "&aMáy chủ hiện đang khuyến mãi &e%s, &ahãy nạp thẻ ngay nhé!"
 
 TheSieuToc:
   api-key: ""

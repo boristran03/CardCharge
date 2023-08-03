@@ -4,13 +4,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.objects.Card;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.*;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,10 @@ public class TheSieuTocAPI {
 
     private final String API_SERVER = "https://thesieutoc.net";
     private final CardCharge plugin = CardCharge.getInstance();
+
+    public static TheSieuTocAPI getInstance() {
+        return INSTANCE_HELPER.theSieuTocAPI;
+    }
 
     public JsonObject sendCard(Card card) {
         final String url = MessageFormat.format(
@@ -34,7 +40,6 @@ public class TheSieuTocAPI {
         return sendRequest(url);
     }
 
-
     private JsonObject sendRequest(String url) {
         try {
             CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
@@ -49,9 +54,6 @@ public class TheSieuTocAPI {
             e.printStackTrace();
             return null;
         }
-    }
-    public static TheSieuTocAPI getInstance() {
-        return INSTANCE_HELPER.theSieuTocAPI;
     }
 
     private static class INSTANCE_HELPER {

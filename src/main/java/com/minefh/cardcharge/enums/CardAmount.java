@@ -18,7 +18,7 @@ public enum CardAmount {
     private final int amount;
     private final int id;
 
-    CardAmount (int amount, int id) {
+    CardAmount(int amount, int id) {
         this.amount = amount;
         this.id = id;
     }
@@ -34,8 +34,8 @@ public enum CardAmount {
 
     public static List<String> getEnabledAmountAsStr() {
         List<String> result = new ArrayList<>();
-        for(CardAmount cardAmount: values()) {
-            if(cardAmount.amount == 0) {
+        for (CardAmount cardAmount : values()) {
+            if (cardAmount.amount == 0) {
                 continue;
             }
             result.add(String.valueOf(cardAmount.amount));

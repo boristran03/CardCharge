@@ -1,7 +1,6 @@
 package com.minefh.cardcharge.objects;
 
 import com.minefh.cardcharge.enums.CardAmount;
-import org.bukkit.entity.Player;
 
 public class Card {
 

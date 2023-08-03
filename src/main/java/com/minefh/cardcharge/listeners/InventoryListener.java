@@ -16,14 +16,14 @@ public class InventoryListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent e) {
-        if(!(e.getWhoClicked() instanceof Player player)) {
+        if (!(e.getWhoClicked() instanceof Player player)) {
             return;
         }
         Inventory inv = e.getInventory();
-        if(inv.getHolder() instanceof CardSelector) {
+        if (inv.getHolder() instanceof CardSelector) {
             CardSelector holder = (CardSelector) inv.getHolder();
             String selectedTelco = holder.getCardBySlot(e.getSlot());
-            if(selectedTelco != null) {
+            if (selectedTelco != null) {
                 Card card = new Card();
                 card.setType(selectedTelco);
                 AmountSelector amountSelectorUI = new AmountSelector(selectedTelco, card);
@@ -33,10 +33,10 @@ public class InventoryListener implements Listener {
             player.playSound(player, Sound.UI_BUTTON_CLICK, 9999999, 1);
             return;
         }
-        if(inv.getHolder() instanceof AmountSelector) {
+        if (inv.getHolder() instanceof AmountSelector) {
             AmountSelector holder = (AmountSelector) inv.getHolder();
             int selectedAmount = holder.getAmountBySlot(e.getSlot());
-            if(selectedAmount != 0) {
+            if (selectedAmount != 0) {
                 Card card = holder.getCard();
                 card.setAmount(CardAmount.getAmount(selectedAmount));
                 new SerialInput(card).open(player);

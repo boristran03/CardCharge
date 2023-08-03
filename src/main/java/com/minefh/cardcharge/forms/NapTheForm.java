@@ -43,11 +43,11 @@ public class NapTheForm {
         String serialNumber = response.next();
         String pinNumber = response.next();
 
-        if(serialNumber == null || serialNumber.isEmpty() || pinNumber == null || pinNumber.isEmpty()) {
+        if (serialNumber == null || serialNumber.isEmpty() || pinNumber == null || pinNumber.isEmpty()) {
             player.sendMessage(Component.text("§cSố serial và mã thẻ khng được để trống!"));
             return;
         }
-        if(!PluginUtils.isFullOfNumber(serialNumber) || !PluginUtils.isFullOfNumber(pinNumber)) {
+        if (!PluginUtils.isFullOfNumber(serialNumber) || !PluginUtils.isFullOfNumber(pinNumber)) {
             player.sendMessage(Component.text("§cSố serial hoặc mã thẻ không hợp lệ, vui lòng kiểm tra lại"));
             return;
         }

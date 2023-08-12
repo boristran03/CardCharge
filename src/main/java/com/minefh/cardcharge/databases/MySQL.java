@@ -92,7 +92,7 @@ public class MySQL {
     public void debugDonate(String playerName, int amount) {
         String INSERT = "INSERT INTO success_donate (transaction_id, player_name, amount, serial, pin, telco, update_time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
-        try {
+            try {
             statement = getConnection().prepareStatement(INSERT);
 
             //TRANSACTION INFORMATION

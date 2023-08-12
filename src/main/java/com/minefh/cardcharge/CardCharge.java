@@ -4,7 +4,6 @@ import com.minefh.cardcharge.cache.CacheStorage;
 import com.minefh.cardcharge.commands.NapTheCommand;
 import com.minefh.cardcharge.databases.MySQL;
 import com.minefh.cardcharge.listeners.InventoryListener;
-import com.minefh.cardcharge.tasks.DiscountAnnounceTask;
 import com.minefh.cardcharge.utils.PluginUtils;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
@@ -69,9 +68,6 @@ public final class CardCharge extends JavaPlugin {
             getLogger().warning("MySQL is not enabled, some function maybe not work!");
         }
 
-        // INITIALIZE TASK
-        new DiscountAnnounceTask();
-
         //CONSOLE INFORMATION STUFF
         getLogger().info("Points rate has been set to " + this.pointsRate);
     }
@@ -112,7 +108,6 @@ public final class CardCharge extends JavaPlugin {
         this.leftInputPin = PluginUtils.parseConfigItem("PC-GUI.pinInput.left-item", getConfig());
         this.pointsRate = getConfig().getInt("Discount.Points-Rate");
         this.announceMessage = getConfig().getStringList("Discount.Announce-Messages");
-        this.timer = getConfig().getLong("Discount.Timer");
 
         //MYSQL ZONE
         this.isMySQLEnabled = getConfig().getBoolean("MySQL.enabled");
@@ -128,9 +123,6 @@ public final class CardCharge extends JavaPlugin {
         return this.playerPointsAPI;
     }
 
-    public long getTimer() {
-        return timer;
-    }
 
     public int getPointsRate() {
         return pointsRate;

@@ -7,11 +7,10 @@ Card-Enabled:
   - 'Zing'
   - 'Gate'
 
+#Cách tính: (số tiền nạp / 1000) * pointsRate = số points nhận được
 Discount:
   Points-Rate: 1
   Timer: 120 #AS SECOND
-  Announce-Messages:
-    - "&aMáy chủ hiện đang khuyến mãi &e%s, &ahãy nạp thẻ ngay nhé!"
 
 TheSieuToc:
   api-key: ""

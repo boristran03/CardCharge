@@ -11,20 +11,16 @@ import java.util.List;
 
 public class CacheStorage {
 
-    // JUST SAVE WHEN THE PLUGIN IS DOWN OR ON SERVER SHUTDOWN
+    // Save our cache in a file against unexpected crashes
 
     private final Gson gson;
     private final CardCharge plugin;
     private final CardCache cardCache;
 
-    private CacheStorage() {
-        this.plugin = CardCharge.getInstance();
-        this.cardCache = CardCache.getInstance();
+    public CacheStorage(CardCharge plugin) {
+        this.plugin = plugin;
+        this.cardCache = plugin.getCardCache();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
-    }
-
-    public static CacheStorage getInstance() {
-        return InstanceHelper.INSTANCE;
     }
 
     public void savePendingTransactions() {
@@ -37,7 +33,7 @@ public class CacheStorage {
             plugin.getLogger().warning(transactions.size() + " " +
                     "pending cards has been saved to cache.json");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error occurred when trying to save pending transactions");
         } finally {
             PluginUtils.cleanUpFileIO(writer, null);
         }
@@ -56,16 +52,12 @@ public class CacheStorage {
                 return;
             }
             for (Transaction transaction : transactions) {
-                CardCache.getInstance().addTransaction(transaction);
+                plugin.getCardCache().addTransaction(transaction);
                 plugin.getLogger().info("Transaction " + transaction.getCard() + " " +
                         "has been added to the plugin's cache");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error occurred when trying to load transactions");
         }
-    }
-
-    private static class InstanceHelper {
-        private static final CacheStorage INSTANCE = new CacheStorage();
     }
 }

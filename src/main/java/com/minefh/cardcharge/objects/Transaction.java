@@ -1,13 +1,12 @@
 package com.minefh.cardcharge.objects;
 
 import com.google.gson.JsonObject;
-import com.minefh.cardcharge.cache.CardCache;
+import com.minefh.cardcharge.CardCharge;
 import com.minefh.cardcharge.databases.InternalLogger;
-import com.minefh.cardcharge.thesieutoc.TheSieuTocAPI;
+import lombok.Data;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
+@Data
 public class Transaction {
 
     private final long time;
@@ -25,65 +24,27 @@ public class Transaction {
         this.result = Result.PENDING; //DEFAULT RESULT
     }
 
-    public static boolean makeTransaction(Player player, Card card) {
+    public static boolean makeTransaction(CardCharge plugin, Player player, Card card) {
         String submitterUUID = player.getUniqueId().toString();
-        JsonObject response = TheSieuTocAPI.getInstance().sendCard(card);
+        JsonObject response = plugin.getTheSieuTocAPI().sendCard(card);
         InternalLogger logger = InternalLogger.getInstance();
+
+        plugin.debug("SUBMIT CARD", card.toString());
 
         Transaction transaction = new Transaction(player.getName(), submitterUUID, card);
         if (!response.get("status").getAsString().equals("00")) {
             String error = response.get("msg").getAsString();
             player.sendMessage("§cMã lỗi: " + error);
 
-            //SOME LOGGING STUFF BEHIND THIS
+            //Logging player's transaction into an internal log file
             transaction.setReceivedMsg(error);
             logger.logTransaction(transaction, Result.FAIL);
             return false;
         }
         String transactionID = response.get("transaction_id").getAsString();
         transaction.setId(transactionID);
-        CardCache.getInstance().addTransaction(transaction);
+        plugin.getCardCache().addTransaction(transaction);
         return true;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    public long getDate() {
-        return time;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public UUID getSubmiterUUID() {
-        return UUID.fromString(submitPlayerUUID);
-    }
-
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public String getReceivedMsg() {
-        return receivedMsg;
-    }
-
-    public void setReceivedMsg(String receivedMsg) {
-        this.receivedMsg = receivedMsg;
     }
 
     @Override

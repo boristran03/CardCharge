@@ -28,7 +28,7 @@ public class CardSelector implements InventoryHolder {
         Inventory inv = Bukkit.createInventory(this, 27);
         this.cards = new String[inv.getSize()];
         int slot = 0;
-        for (String cardName : plugin.getEnabledCards()) {
+        for (String cardName : plugin.getMainConfig().getEnabledCards()) {
             ItemStack item = new ItemStack(Material.BOOK);
             ItemMeta meta = item.getItemMeta();
             meta.displayName(Component.text(cardName));

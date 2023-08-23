@@ -1,6 +1,7 @@
 package com.minefh.cardcharge.gui;
 
 import com.minefh.cardcharge.CardCharge;
+import com.minefh.cardcharge.config.MainConfig;
 import com.minefh.cardcharge.objects.Card;
 import com.minefh.cardcharge.utils.PluginUtils;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -17,13 +18,13 @@ public record SerialInput(Card card) {
     private static final CardCharge plugin = CardCharge.getInstance();
 
     public void open(Player player) {
-        ItemStack leftItem = plugin.getLeftInputSerial();
+        MainConfig config = plugin.getMainConfig();
+        ItemStack leftItem = config.getLeftInputSerial();
         AnvilGUI.Builder builder = new AnvilGUI.Builder();
-        /*        builder.onClose((this::closeHandle));*/
         builder.onClick(this::clickHandler);
         builder.plugin(plugin);
-        builder.title(plugin.getSerialInputTitle());
-        builder.text(plugin.getSerialInputText());
+        builder.title(config.getSerialInputTitle());
+        builder.text(config.getSerialInputText());
         if (leftItem != null) {
             builder.itemLeft(leftItem);
         }

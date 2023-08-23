@@ -3,6 +3,7 @@ package com.minefh.cardcharge.databases;
 import com.minefh.cardcharge.objects.Card;
 import com.minefh.cardcharge.objects.Transaction;
 import com.minefh.cardcharge.utils.PluginUtils;
+import lombok.Getter;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -11,10 +12,10 @@ import java.util.Map;
 public class MySQL {
 
     private static MySQL __instance;
-
     private final String url;
     private final String username;
     private final String password;
+    @Getter
     private Connection connection;
 
     public MySQL(String hostname, String database, String username, String password) {
@@ -83,7 +84,7 @@ public class MySQL {
             statement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error when inserting " + transaction.toString());
         } finally {
             PluginUtils.cleanMySQL(statement, null);
         }
@@ -92,7 +93,7 @@ public class MySQL {
     public void debugDonate(String playerName, int amount) {
         String INSERT = "INSERT INTO success_donate (transaction_id, player_name, amount, serial, pin, telco, update_time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
-            try {
+        try {
             statement = getConnection().prepareStatement(INSERT);
 
             //TRANSACTION INFORMATION
@@ -110,7 +111,7 @@ public class MySQL {
 
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error when logging player " + playerName);
         } finally {
             PluginUtils.cleanMySQL(statement, null);
         }
@@ -130,15 +131,11 @@ public class MySQL {
                 topTen.put(player_name, total_amount);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error when trying to display top ten donator!");
         } finally {
             PluginUtils.cleanMySQL(statement, rs);
         }
         return topTen;
-        /*Comparator<Integer> keyComparator = Integer::compare;
-
-        // Sort the map by the key
-        return topTen.entrySet().stream().sorted(Map.Entry.comparingByKey(keyComparator).reversed()).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));*/
     }
 
     public void purgeData(String playerName) {
@@ -149,14 +146,10 @@ public class MySQL {
             statement.setString(1, playerName);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error when trying to purge data of " + playerName);
         } finally {
             PluginUtils.cleanMySQL(statement, null);
         }
-    }
-
-    public Connection getConnection() {
-        return connection;
     }
 
 }

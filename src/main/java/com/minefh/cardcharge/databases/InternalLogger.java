@@ -33,7 +33,7 @@ public class InternalLogger {
                 plugin.getLogger().warning("log.txt file has been created!");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error occurred when trying to create log.txt file");
         }
     }
 
@@ -45,14 +45,14 @@ public class InternalLogger {
             writer.println(transaction);
 
             //WILL REFACTOR IN THE FUTURE
-            if (plugin.isMySQLEnabled() && result == Transaction.Result.SUCCESS) {
+            if (plugin.getMainConfig().isMySQLEnabled() && result == Transaction.Result.SUCCESS) {
                 MySQL mySQL = MySQL.getInstance();
                 mySQL.insertDonateSuccess(transaction);
                 plugin.getLogger().warning("A new record has been added to mysql," +
                         " this is debug message and will be removed in the future");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error occurred when trying to log a transaction " + transaction.toString());
         } finally {
             PluginUtils.cleanUpFileIO(writer, null);
         }

@@ -30,8 +30,8 @@ public class PluginUtils {
         Bukkit.dispatchCommand(player, command);
     }
 
-    public static void runCommandAsConsole(Player player, String command) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%p", player.getName()));
+    public static void runCommandAsConsole(String name, String command) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replaceAll("%p", name));
     }
 
     public static ItemStack parseConfigItem(String path, FileConfiguration config) {

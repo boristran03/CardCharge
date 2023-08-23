@@ -2,6 +2,7 @@ package com.minefh.cardcharge.gui;
 
 import com.minefh.cardcharge.enums.CardAmount;
 import com.minefh.cardcharge.objects.Card;
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+@Getter
 public class AmountSelector implements InventoryHolder {
 
     private final String telco;
@@ -31,13 +33,6 @@ public class AmountSelector implements InventoryHolder {
         return values.get(clickedSlot);
     }
 
-    public Card getCard() {
-        return this.card;
-    }
-
-    public String getTelco() {
-        return telco;
-    }
 
     @Override
     public @NotNull Inventory getInventory() {

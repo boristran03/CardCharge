@@ -1,6 +1,7 @@
 package com.minefh.cardcharge.commands;
 
 import com.minefh.cardcharge.CardCharge;
+import com.minefh.cardcharge.config.MainConfig;
 import com.minefh.cardcharge.databases.MySQL;
 import com.minefh.cardcharge.enums.CardAmount;
 import com.minefh.cardcharge.forms.NapTheForm;
@@ -21,9 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NapTheCommand implements CommandExecutor {
 
     private final CardCharge plugin;
+    private final MainConfig config;
 
-    public NapTheCommand() {
-        this.plugin = CardCharge.getInstance();
+    public NapTheCommand(CardCharge plugin) {
+        this.plugin = plugin;
+        this.config = plugin.getMainConfig();
     }
 
     @Override
@@ -34,7 +37,7 @@ public class NapTheCommand implements CommandExecutor {
         if (strings.length == 0 && player.hasPermission("cardcharge.open")) {
             FloodgateApi floodgateApi = FloodgateApi.getInstance();
             if (!floodgateApi.isFloodgatePlayer(player.getUniqueId())) {
-                PluginUtils.runCommandAsConsole(player, "dm open napthe %p");
+                PluginUtils.runCommandAsConsole(player.getName(), "dm open napthe %p");
                 return true;
             }
             floodgateApi.getPlayer(player.getUniqueId()).sendForm(new NapTheForm(player).getForm());
@@ -74,7 +77,7 @@ public class NapTheCommand implements CommandExecutor {
         if (player.hasPermission("cardcharge.viewtop")
                 && strings.length == 1
                 && strings[0].equalsIgnoreCase("top")) {
-            if (!plugin.isMySQLEnabled()) {
+            if (!config.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }
@@ -92,7 +95,7 @@ public class NapTheCommand implements CommandExecutor {
         if (player.hasPermission("cardcharge.admin")
                 && strings.length == 3
                 && strings[0].equalsIgnoreCase("test")) {
-            if (!plugin.isMySQLEnabled()) {
+            if (!config.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }
@@ -107,7 +110,7 @@ public class NapTheCommand implements CommandExecutor {
         if (player.hasPermission("cardcharge.admin")
                 && strings.length == 2
                 && strings[0].equalsIgnoreCase("purge")) {
-            if (!plugin.isMySQLEnabled()) {
+            if (!config.isMySQLEnabled()) {
                 player.sendMessage(Component.text("§cTính năng này yêu cầu phải sử dụng mysql!"));
                 return true;
             }

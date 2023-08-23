@@ -25,7 +25,7 @@ public class NapTheForm {
 
     public CustomForm getForm() {
         CustomForm.Builder builder = CustomForm.builder();
-        List<String> enabledCards = plugin.getEnabledCards();
+        List<String> enabledCards = plugin.getMainConfig().getEnabledCards();
         List<String> enabledAmount = CardAmount.getEnabledAmountAsStr();
 
         builder.dropdown("Chọn nhà mạng", enabledCards);
@@ -58,7 +58,7 @@ public class NapTheForm {
         card.setPin(pinNumber);
 
         Bukkit.getScheduler().runTaskAsynchronously(CardCharge.getInstance(), () -> {
-            boolean submitSuccess = Transaction.makeTransaction(player, card);
+            boolean submitSuccess = Transaction.makeTransaction(plugin, player, card);
             if (submitSuccess) {
                 player.sendMessage("§aThẻ của bạn đã được gửi thành công lên hệ thống!");
             } else {

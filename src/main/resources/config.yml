@@ -7,11 +7,6 @@ Card-Enabled:
   - 'Zing'
   - 'Gate'
 
-#Cách tính: (số tiền nạp / 1000) * pointsRate = số points nhận được
-Discount:
-  Points-Rate: 1
-  Timer: 120 #AS SECOND
-
 TheSieuToc:
   api-key: ""
   api-secret: ""
@@ -22,6 +17,22 @@ MySQL:
   database: ""
   username: "root"
   password: ""
+
+Success-Commands:
+  10000:
+    - points give %p 10
+  20000:
+    - points give %p 20
+  50000:
+    - points give %p 30
+  100000:
+    - points give %p 100
+  200000:
+    - points give %p 200
+  500000:
+    - points give %p 500
+  1000000:
+    - points give %p 1000
 
 PC-GUI:
   serialInput:

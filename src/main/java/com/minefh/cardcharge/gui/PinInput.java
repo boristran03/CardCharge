@@ -1,6 +1,7 @@
 package com.minefh.cardcharge.gui;
 
 import com.minefh.cardcharge.CardCharge;
+import com.minefh.cardcharge.config.MainConfig;
 import com.minefh.cardcharge.objects.Card;
 import com.minefh.cardcharge.objects.Transaction;
 import com.minefh.cardcharge.utils.PluginUtils;
@@ -18,23 +19,23 @@ public record PinInput(Card card) {
     private static final CardCharge plugin = CardCharge.getInstance();
 
     public void open(Player player) {
-        ItemStack leftItem = plugin.getLeftInputPin();
+        MainConfig config = plugin.getMainConfig();
+        ItemStack leftItem = config.getLeftInputPin();
         AnvilGUI.Builder builder = new AnvilGUI.Builder();
         /*        builder.onClose((this::closeHandle));*/
         builder.onClick(this::clickHandler);
         builder.plugin(plugin);
-        builder.title(plugin.getPinInputTitle());
-        builder.text(plugin.getPinInputText());
+        builder.title(config.getPinInputTitle());
+        builder.text(config.getPinInputText());
+
         if (leftItem != null) {
             builder.itemLeft(leftItem);
         }
+
         builder.open(player);
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 9999999, 1);
     }
 
-/*    public void closeHandle(AnvilGUI.StateSnapshot stateSnapshot) {
-        Player player = stateSnapshot.getPlayer();
-    }*/
 
     public List<AnvilGUI.ResponseAction> clickHandler(int slot, AnvilGUI.StateSnapshot stateSnapshot) {
         Player player = stateSnapshot.getPlayer();
@@ -45,7 +46,7 @@ public record PinInput(Card card) {
         if (PluginUtils.isFullOfNumber(input)) {
             card.setPin(input);
             Bukkit.getScheduler().runTaskAsynchronously(CardCharge.getInstance(), () -> {
-                boolean submitSuccess = Transaction.makeTransaction(player, card);
+                boolean submitSuccess = Transaction.makeTransaction(plugin, player, card);
                 if (submitSuccess) {
                     player.sendMessage("§aThẻ của bạn đã được gửi thành công lên hệ thống!");
                 } else {
